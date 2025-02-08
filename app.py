@@ -66,7 +66,7 @@ def load_history():
     return history
 
 def main():
-    st.title("Stock Data Viewer with Question Logging")
+    st.title("Document based QA System with Question Logging")
 
     # Initialize database
     initialize_database()
