@@ -1,10 +1,9 @@
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.llms import HuggingFacePipeline
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA
 from transformers import pipeline
 from transformers import AutoTokenizer, AutoModelForCausalLM
-# from langchain.llms import HuggingFacePipeline
 
 class DocGPT:
     def __init__(self, docs):
@@ -34,10 +33,6 @@ class DocGPT:
         local_llm = HuggingFacePipeline(pipeline=pipe)
         self.qa_chain = RetrievalQA.from_chain_type(llm=local_llm, retriever=retriever, verbose=False)
 
-    # def run(self, query: str) -> str:
-    #     if not self.qa_chain:
-    #         return "QA chain not initialized. Please create the QA chain first."
-    #     return self.qa_chain.run(query)
 
     def run(self, query: str) -> str:
         if not self.qa_chain:
