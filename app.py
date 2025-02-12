@@ -60,13 +60,19 @@ def main():
 
     # Accept user queries
     query = st.text_input("Ask a question about the stock data:")
-    if query:
-        # Save the query to the database
-        save_to_history(query)
-        question_history.append(query)
+    # if query:
+    #     # Save the query to the database
+    #     save_to_history(query)
+    #     question_history.append(query)
 
+    #     response = doc_gpt.run(query)
+    #     st.write("Response:", response)
+    if query:
         response = doc_gpt.run(query)
+        save_to_history(query, response)  # Ensure you pass both question and answer
+        question_history.append((query, response))
         st.write("Response:", response)
+
 
     # Display question history
     if question_history:
@@ -74,18 +80,31 @@ def main():
         for i, question in enumerate(question_history, 1):
             st.write(f"{i}. {question}")
 
+# def initialize_database():
+#     """Initialize the SQLite database."""
+#     conn = sqlite3.connect(DATABASE)
+#     cursor = conn.cursor()
+#     cursor.execute("""
+#         CREATE TABLE IF NOT EXISTS question_history (
+#             id INTEGER PRIMARY KEY AUTOINCREMENT,
+#             question TEXT NOT NULL
+#         )
+#     """)
+#     conn.commit()
+#     conn.close()
 def initialize_database():
-    """Initialize the SQLite database."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS question_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            question TEXT NOT NULL
+            question TEXT NOT NULL,
+            answer TEXT NOT NULL
         )
     """)
     conn.commit()
     conn.close()
+
 
 def load_history():
     """Load the question history from the SQLite database."""
@@ -96,13 +115,21 @@ def load_history():
     conn.close()
     return history
 
-def save_to_history(question):
-    """Save a new question to the SQLite database."""
+# def save_to_history(question):
+#     """Save a new question to the SQLite database."""
+#     conn = sqlite3.connect(DATABASE)
+#     cursor = conn.cursor()
+#     cursor.execute("INSERT INTO question_history (question) VALUES (?)", (question,))
+#     conn.commit()
+#     conn.close()
+def save_to_history(question, answer):
+    """Save a new question and answer to the SQLite database."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO question_history (question) VALUES (?)", (question,))
+    cursor.execute("INSERT INTO question_history (question, answer) VALUES (?, ?)", (question, answer))
     conn.commit()
     conn.close()
+
 
 if __name__ == "__main__":
     main()

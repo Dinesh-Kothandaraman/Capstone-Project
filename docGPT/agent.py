@@ -3,7 +3,9 @@ from typing import Optional
 
 import openai
 from langchain.agents import AgentType, Tool, initialize_agent
-from langchain.callbacks import get_openai_callback
+# from langchain.callbacks import get_openai_callback
+# from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
