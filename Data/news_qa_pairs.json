@@ -1,0 +1,422 @@
+[
+    {
+        "question": "What is the sentiment of the article titled 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "Summarize the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '.",
+        "answer": "Buffett's Berkshire Hathaway reshuffles its portfolio, maintaining a strong grip on Apple shares. Buffett's latest moves stir curiosity ahead of his much-anticipated annual letter to investors."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "DMPZF, AAPL, C, ULTA, BAC, BRK-A, STZ, COF, DPZ"
+    },
+    {
+        "question": "What is the sentiment of DMPZF in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Bullish"
+    },
+    {
+        "question": "What is the sentiment of C in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of ULTA in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of BAC in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of BRK-A in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of STZ in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of COF in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of DPZ in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What topics are covered in the article 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
+        "answer": "Retail & Wholesale, Financial Markets, Manufacturing, Earnings, Technology, Finance"
+    },
+    {
+        "question": "What is the sentiment of the article titled 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "Summarize the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '.",
+        "answer": "Benzinga examined the prospects for many investors' favorite stocks over the last week - here's a look at some of our top stories. The S&P 500 rose about 1.5% this week, while the Dow gained 0.6% and the Nasdaq climbed 2.6%."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "AA, NFLX, NVDA, AAPL, AVGO, CENX, SBUX, X, CLF, TSM, CRYPTO:DOGE"
+    },
+    {
+        "question": "What is the sentiment of AA in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of NFLX in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Bullish"
+    },
+    {
+        "question": "What is the sentiment of NVDA in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of AVGO in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of CENX in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of SBUX in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bearish"
+    },
+    {
+        "question": "What is the sentiment of X in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of CLF in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of TSM in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of CRYPTO:DOGE in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What topics are covered in the article 'Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 Bulls and Bears: Apple, Nvidia, Netflix and Trader Predicts Dogecoin Surge by March 24 - Alcoa  ( NYSE:AA ) '?",
+        "answer": "Energy & Transportation, Technology, Economy - Monetary, Retail & Wholesale, Financial Markets, Manufacturing, Earnings"
+    },
+    {
+        "question": "What is the sentiment of the article titled 'Steve Jobs-Signed Rare Apple Business Card Goes Up For Auction, Bids Touch $75,000'?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "Summarize the article 'Steve Jobs-Signed Rare Apple Business Card Goes Up For Auction, Bids Touch $75,000'.",
+        "answer": "A rare business card signed by late Apple Inc. co-founder Steve Jobs is drawing significant attention at an ongoing auction. What Happened: This unique piece of memorabilia, dating back to 1983, features Jobs's signature alongside the iconic Apple rainbow logo."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Steve Jobs-Signed Rare Apple Business Card Goes Up For Auction, Bids Touch $75,000'?",
+        "answer": "AAPL"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Steve Jobs-Signed Rare Apple Business Card Goes Up For Auction, Bids Touch $75,000'?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What topics are covered in the article 'Steve Jobs-Signed Rare Apple Business Card Goes Up For Auction, Bids Touch $75,000'?",
+        "answer": "Technology, Financial Markets"
+    },
+    {
+        "question": "What is the sentiment of the article titled 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "Summarize the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '.",
+        "answer": "Bill Gates, co-founder of Microsoft Corp. MSFT, expressed regret over leaving Harvard University to start the tech giant. What Happened: Gates, who was a Harvard undergraduate at the time, struggled with the decision to leave school despite having a great time there, according to a CNBC report."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "MSFT, AAPL, INTC"
+    },
+    {
+        "question": "What is the sentiment of MSFT in the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of INTC in the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "Somewhat-Bearish"
+    },
+    {
+        "question": "What topics are covered in the article 'Bill Gates Wanted A Friend To 'Take Charge' Of Microsoft Due To Regret Over Leaving Harvard, But Here's Why He Panicked And Dropped Out - Microsoft  ( NASDAQ:MSFT ) , Intel  ( NASDAQ:INTC ) '?",
+        "answer": "Technology, Manufacturing"
+    },
+    {
+        "question": "What is the sentiment of the article titled 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "Summarize the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '.",
+        "answer": "Activist investor Dan Loeb's Third Point LLC has significantly ramped up its stakes in Flutter Entertainment FLUT, Elon Musk's Tesla Inc. TSLA, and Mark Zuckerberg's Meta Platforms Inc. META during the final quarter of 2024."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "MSFT, META, AAPL, TSLA, FLUT, AMZN"
+    },
+    {
+        "question": "What is the sentiment of MSFT in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of META in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of TSLA in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of FLUT in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What is the sentiment of AMZN in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Neutral"
+    },
+    {
+        "question": "What topics are covered in the article 'Activist Investor Dan Loeb Boosts Stake In Mark Zuckerberg's Meta And Elon Musk's Tesla, But Sold These Three Mag 7 Stocks In Q4 - Apple  ( NASDAQ:AAPL ) , Amazon.com  ( NASDAQ:AMZN ) '?",
+        "answer": "Retail & Wholesale, Financial Markets, Manufacturing, Mergers & Acquisitions, Technology"
+    },
+    {
+        "question": "What is the sentiment of the article titled 'Surprise: McDonald's Has Higher Profit Margins Than Tesla, Apple, or Netflix'?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "Summarize the article 'Surprise: McDonald's Has Higher Profit Margins Than Tesla, Apple, or Netflix'.",
+        "answer": "Restaurants have notoriously low profit margins. But McDonald's ( NYSE: MCD ) , the world's largest restaurant chain, is surprisingly one of the most profitable businesses. In fact, its profit margins are higher than prestigious businesses such as Tesla ( NASDAQ: TSLA ) , Apple ( NASDAQ: AAPL ) , ..."
+    },
+    {
+        "question": "Which stocks are mentioned in the article 'Surprise: McDonald's Has Higher Profit Margins Than Tesla, Apple, or Netflix'?",
+        "answer": "NFLX, AAPL, TSLA, MDNDF"
+    },
+    {
+        "question": "What is the sentiment of NFLX in the article 'Surprise: McDonald's Has Higher Profit Margins Than Tesla, Apple, or Netflix'?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What is the sentiment of AAPL in the article 'Surprise: McDonald's Has Higher Profit Margins Than Tesla, Apple, or Netflix'?",
+        "answer": "Somewhat-Bullish"
+    },
+    {
+        "question": "What was the opening price of IBM in 2025-02-14?",
+        "answer": "The opening price of IBM in 2025-02-14 was $252.4000."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2025-02-14?",
+        "answer": "The highest price IBM reached in 2025-02-14 was $265.7200."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2025-02-14?",
+        "answer": "The lowest price IBM traded at in 2025-02-14 was $246.8700."
+    },
+    {
+        "question": "What was the closing price of IBM in 2025-02-14?",
+        "answer": "The closing price of IBM in 2025-02-14 was $261.2800."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2025-02-14?",
+        "answer": "The trading volume for IBM in 2025-02-14 was 50047921."
+    },
+    {
+        "question": "What was the opening price of IBM in 2025-01-31?",
+        "answer": "The opening price of IBM in 2025-01-31 was $221.8200."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2025-01-31?",
+        "answer": "The highest price IBM reached in 2025-01-31 was $261.8000."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2025-01-31?",
+        "answer": "The lowest price IBM traded at in 2025-01-31 was $214.6100."
+    },
+    {
+        "question": "What was the closing price of IBM in 2025-01-31?",
+        "answer": "The closing price of IBM in 2025-01-31 was $255.7000."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2025-01-31?",
+        "answer": "The trading volume for IBM in 2025-01-31 was 92424171."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-12-31?",
+        "answer": "The opening price of IBM in 2024-12-31 was $227.5000."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-12-31?",
+        "answer": "The highest price IBM reached in 2024-12-31 was $239.3500."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-12-31?",
+        "answer": "The lowest price IBM traded at in 2024-12-31 was $217.6523."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-12-31?",
+        "answer": "The closing price of IBM in 2024-12-31 was $219.8300."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-12-31?",
+        "answer": "The trading volume for IBM in 2024-12-31 was 81535689."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-11-29?",
+        "answer": "The opening price of IBM in 2024-11-29 was $207.7700."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-11-29?",
+        "answer": "The highest price IBM reached in 2024-11-29 was $230.3600."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-11-29?",
+        "answer": "The lowest price IBM traded at in 2024-11-29 was $204.0700."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-11-29?",
+        "answer": "The closing price of IBM in 2024-11-29 was $227.4100."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-11-29?",
+        "answer": "The trading volume for IBM in 2024-11-29 was 77280587."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-10-31?",
+        "answer": "The opening price of IBM in 2024-10-31 was $220.6300."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-10-31?",
+        "answer": "The highest price IBM reached in 2024-10-31 was $237.3700."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-10-31?",
+        "answer": "The lowest price IBM traded at in 2024-10-31 was $203.5100."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-10-31?",
+        "answer": "The closing price of IBM in 2024-10-31 was $206.7200."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-10-31?",
+        "answer": "The trading volume for IBM in 2024-10-31 was 105624376."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-09-30?",
+        "answer": "The opening price of IBM in 2024-09-30 was $201.9100."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-09-30?",
+        "answer": "The highest price IBM reached in 2024-09-30 was $224.1500."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-09-30?",
+        "answer": "The lowest price IBM traded at in 2024-09-30 was $199.3350."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-09-30?",
+        "answer": "The closing price of IBM in 2024-09-30 was $221.0800."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-09-30?",
+        "answer": "The trading volume for IBM in 2024-09-30 was 83415811."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-08-30?",
+        "answer": "The opening price of IBM in 2024-08-30 was $192.8100."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-08-30?",
+        "answer": "The highest price IBM reached in 2024-08-30 was $202.1700."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-08-30?",
+        "answer": "The lowest price IBM traded at in 2024-08-30 was $181.8100."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-08-30?",
+        "answer": "The closing price of IBM in 2024-08-30 was $202.1300."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-08-30?",
+        "answer": "The trading volume for IBM in 2024-08-30 was 65453729."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-07-31?",
+        "answer": "The opening price of IBM in 2024-07-31 was $173.4500."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-07-31?",
+        "answer": "The highest price IBM reached in 2024-07-31 was $196.2600."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-07-31?",
+        "answer": "The lowest price IBM traded at in 2024-07-31 was $173.3800."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-07-31?",
+        "answer": "The closing price of IBM in 2024-07-31 was $192.1400."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-07-31?",
+        "answer": "The trading volume for IBM in 2024-07-31 was 81258646."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-06-28?",
+        "answer": "The opening price of IBM in 2024-06-28 was $166.5400."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-06-28?",
+        "answer": "The highest price IBM reached in 2024-06-28 was $178.4599."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-06-28?",
+        "answer": "The lowest price IBM traded at in 2024-06-28 was $163.5300."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-06-28?",
+        "answer": "The closing price of IBM in 2024-06-28 was $172.9500."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-06-28?",
+        "answer": "The trading volume for IBM in 2024-06-28 was 70706301."
+    },
+    {
+        "question": "What was the opening price of IBM in 2024-05-31?",
+        "answer": "The opening price of IBM in 2024-05-31 was $165.6900."
+    },
+    {
+        "question": "What was the highest price IBM reached in 2024-05-31?",
+        "answer": "The highest price IBM reached in 2024-05-31 was $175.4600."
+    },
+    {
+        "question": "What was the lowest price IBM traded at in 2024-05-31?",
+        "answer": "The lowest price IBM traded at in 2024-05-31 was $162.6200."
+    },
+    {
+        "question": "What was the closing price of IBM in 2024-05-31?",
+        "answer": "The closing price of IBM in 2024-05-31 was $166.8500."
+    },
+    {
+        "question": "What was the trading volume for IBM in 2024-05-31?",
+        "answer": "The trading volume for IBM in 2024-05-31 was 78620355."
+    }
+]
