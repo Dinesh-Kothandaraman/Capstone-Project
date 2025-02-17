@@ -36,6 +36,8 @@ class DocGPT:
         
         embeddings = HuggingFaceEmbeddings(model_name=self.embedding_model)
         chunked_docs = self._preprocess_docs()
+        if not chunked_docs:
+            raise ValueError("No documents available for embedding. Check data sources.")
         self._db = FAISS.from_documents(chunked_docs, embedding=embeddings)
         return self._db
 
@@ -47,8 +49,8 @@ class DocGPT:
         # Load Tokenizer and Model Efficiently
         tokenizer = AutoTokenizer.from_pretrained(model_path)
         model = AutoModelForCausalLM.from_pretrained(
-            model_path, device_map="auto", torch_dtype=torch.float16
-        )
+            model_path, torch_dtype=torch.float16
+        )  #, device_map="auto"
 
         # Create Optimized LLM Pipeline
         pipe = pipeline(

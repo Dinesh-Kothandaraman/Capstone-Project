@@ -6,10 +6,10 @@ from langchain.schema import Document
 from docGPT import DocGPT
 
 # API Configuration
-STOCK_API_KEY = "D9AKJQG6VC99GUBR"  # Replace with your real API Key
+STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
 
-NEWS_API_KEY = "D9AKJQG6VC99GUBR"  # Replace with your real News API Key
+NEWS_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real News API Key
 NEWS_API_URL = "https://www.alphavantage.co/query"
 
 QA_PAIRS_PATH = r"C:\Users\dines\OneDrive\Documents\GitHub\Capstone Project\Data\news_qa_pairs.json"  # Pre-generated QA file
@@ -138,7 +138,9 @@ def main():
     # Train the DocGPT model with API stock data, news articles, and QA pairs
     st.write("🧠 Training model with API data + QA pairs...")
     doc_gpt = DocGPT(docs)
+    st.write("Debug: Initializing QA chain...")
     doc_gpt.create_qa_chain()
+    st.write("Debug: QA chain initialized successfully!")
     st.success("✅ Training complete!")
 
     # Accept user queries
