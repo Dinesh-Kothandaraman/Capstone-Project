@@ -1,5 +1,85 @@
 [
     {
+        "question": "What was the highest closing price for IBM in the data provided?",
+        "answer": "$134.9400 on September 29, 2000"
+    },
+    {
+        "question": "What was the lowest opening price for IBM in the data provided?",
+        "answer": "$84.5000 on January 31, 2001"
+    },
+    {
+        "question": "Which month had the highest trading volume in the data provided?",
+        "answer": "March 30, 2001 with a volume of 254,550,000"
+    },
+    {
+        "question": "Which month had the highest high price, and what was that price?",
+        "answer": "September 29, 2000 with a high of $134.9400"
+    },
+    {
+        "question": "What is the average closing price for IBM from the data provided?",
+        "answer": "$111.82"
+    },
+    {
+        "question": "How many times did the closing price surpass $200?",
+        "answer": "0 times"
+    },
+    {
+        "question": "What was the total volume traded over the entire data period?",
+        "answer": "3,396,314,300"
+    },
+    {
+        "question": "In which months did IBM 2019s closing price decrease compared to the previous month?",
+        "answer": "April 30, 2001, and May 31, 2000"
+    },
+    {
+        "question": "What was the range (difference between the high and low prices) for February 2005?",
+        "answer": "$6.5400"
+    },
+    {
+        "question": "What was the opening price in May 2000?",
+        "answer": "$112.5000"
+    },
+    {
+        "question": "Which month had the lowest closing price in the data provided?",
+        "answer": "$85.0000 on December 29, 2000"
+    },
+    {
+        "question": "How many times did the volume exceed 100 million?",
+        "answer": "15 times"
+    },
+    {
+        "question": "What was the highest volume recorded in the data?",
+        "answer": "254,550,000 on March 30, 2001"
+    },
+    {
+        "question": "What was the average high price for IBM from the data provided?",
+        "answer": "$116.76"
+    },
+    {
+        "question": "Which month had the lowest low price?",
+        "answer": "$80.0600 on December 29, 2000"
+    },
+    {
+        "question": "What was the closing price in March 2000?",
+        "answer": "$118.3700"
+    },
+    {
+        "question": "Which month had the highest closing price in 2000?",
+        "answer": "$134.9400 on September 29, 2000"
+    },
+    {
+        "question": "What was the high price in June 2000?",
+        "answer": "$122.3100"
+    },
+    {
+        "question": "How did the closing price change from July 2000 to August 2000?",
+        "answer": "The closing price increased from $112.2500 in July to $132.0200 in August"
+    },
+    {
+        "question": "What was the low price in January 2001?",
+        "answer": "$83.7500"
+    },
+    {
         "question": "What is the sentiment of the article titled 'Berkshire Hathaway Adjusts Portfolio, Keeps Apple Stake Unchanged, Offloads Stakes in BofA - Apple  ( NASDAQ:AAPL ) , Bank of America  ( NYSE:BAC ) '?",
         "answer": "Somewhat-Bullish"
     },
