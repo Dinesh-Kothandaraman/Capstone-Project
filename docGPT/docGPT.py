@@ -3,7 +3,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM
+from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2SeqLM
 from langchain.docstore.document import Document
 import torch
 
@@ -41,22 +41,22 @@ class DocGPT:
         self._db = FAISS.from_documents(chunked_docs, embedding=embeddings)
         return self._db
 
-    def create_qa_chain(self, retriever_k=5, model_path="D:/New folder"):
+    def create_qa_chain(self, retriever_k=5, model_path="google/flan-t5-small"):
         """Sets up the RAG pipeline with an efficient retriever."""
         db = self._embeddings()
         retriever = db.as_retriever(search_kwargs={"k": retriever_k})
 
         # Load Tokenizer and Model Efficiently
         tokenizer = AutoTokenizer.from_pretrained(model_path)
-        model = AutoModelForCausalLM.from_pretrained(
-            model_path, torch_dtype=torch.float16
-        )  #, device_map="auto"
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_path, torch_dtype=torch.float16) #, device_map="auto"
 
         # Create Optimized LLM Pipeline
-        pipe = pipeline(
-            "text-generation", model=model, tokenizer=tokenizer,
-            max_new_tokens=150, temperature=0.7, do_sample=True
-        )
+        # pipe = pipeline(
+        #     "text-generation", model=model, tokenizer=tokenizer,
+        #     max_new_tokens=150, temperature=0.7, do_sample=True
+        # )
+        pipe = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
+
         local_llm = HuggingFacePipeline(pipeline=pipe)
 
         self.qa_chain = RetrievalQA.from_chain_type(
