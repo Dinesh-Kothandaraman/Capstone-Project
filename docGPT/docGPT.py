@@ -68,5 +68,14 @@ class DocGPT:
         if not self.qa_chain:
             return "Error: QA chain not initialized. Please create the QA chain first."
 
-        response = self.qa_chain(query)
-        return response.get("result", "No answer generated.")
+        try:
+            print(f"Received Query: {query}")  # Debug line
+            response = self.qa_chain(query)
+            print(f"Response from Model: {response}")  # Debug line
+
+            return response.get("result", "No answer generated.")
+        except Exception as e:
+            print(f"Error in run(): {e}")  # Debug error
+            return f"Error: {e}"
+        # response = self.qa_chain(query)
+        # return response.get("result", "No answer generated.")
