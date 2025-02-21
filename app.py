@@ -331,22 +331,22 @@
 # def main():
 #     st.title("📊 Stock & News QA System (Two APIs + QA Pairs + Optional Documents)")
 
-#     # Initialize database
+#     #Initialize database
 #     initialize_database()
 #     question_history = load_history()
 
-#     # Step 1: Fetch stock and news data
+#     #Step 1: Fetch stock and news data
 #     st.write("🔄 Fetching stock data and news...")
 #     stock_docs = fetch_stock_data()
-#     st.write("Stock Docs:", stock_docs)
+#     # st.write("Stock Docs:", stock_docs)
 #     news_docs = fetch_stock_news()
-#     st.write("News Docs:", news_docs)
-    
-#     # Step 2: Load pre-generated QA pairs
+#     # st.write("News Docs:", news_docs)
+
+#     #Step 2: Load pre-generated QA pairs
 #     st.write("🔄 Loading QA pairs dataset...")
 #     qa_docs = load_qa_pairs()
-
-#     # Step 3: Upload a document (Optional)
+    
+#     #Step 3: Upload a document (Optional)
 #     st.subheader("📂 Upload a Document (TXT or PDF) - *Optional*")
 #     uploaded_file = st.file_uploader("Upload a .txt or .pdf file (or skip)", type=["txt", "pdf"])
 
@@ -360,43 +360,43 @@
 #             st.warning("⚠️ File processing failed. Proceeding without a document.")
 #     else:
 #         st.info("ℹ️ No document uploaded. Skipping file processing.")
-
-#     # Step 4: Process Data Only After File Upload or Skip
+        
+#     #Step 4: Process Data Only After File Upload or Skip
 #     if st.button("🚀 Process Data and Train Model"):
 #         docs = stock_docs + news_docs + qa_docs + uploaded_docs
-#         st.write("Total Documents for Model:", len(docs))
 
 #         if not docs:
 #             st.error("No data available for training.")
 #             return
 
-#         # Train the DocGPT model
-#         st.write("🧠 Training model with API data, QA pairs, and uploaded documents (if any)...")
+#     # Train the DocGPT model with API stock data, news articles, and QA pairs
+#         st.write("🧠 Training model with API data + QA pairs...")
 #         doc_gpt = DocGPT(docs)
 #         st.write("Debug: Initializing QA chain...")
 #         doc_gpt.create_qa_chain()
 #         st.write("Debug: QA chain initialized successfully!")
 #         st.success("✅ Training complete!")
 
-#         # Step 5: Accept user queries
-#         query = st.text_input("🔍 Ask a question about stock data, news, QA pairs, or the uploaded document:")
+#         # Accept user queries
+#         query = st.text_input("🔍 Ask a question about stock data, news, or QA pairs:")
 
 #         if query:
-#             st.write("Processing Query with DocGPT...")
 #             response = doc_gpt.run(query)
 #             save_to_history(query, response)
 #             question_history.append((query, response))
 #             st.write("**Answer:**", response)
 
-#     # Display question history
-#     if question_history:
-#         st.write("### 📜 Question History")
-#         for i, (q, a) in enumerate(question_history, 1):
-#             st.write(f"{i}. **Q:** {q}  \n   **A:** {a}")
+#         # Display question history
+#         if question_history:
+#             st.write("### 📜 Question History")
+#             for i, (q, a) in enumerate(question_history, 1):
+#                 st.write(f"{i}. **Q:** {q}  \n   **A:** {a}")
+
 
 # if __name__ == "__main__":
 #     main()
-
+   
+     
 import streamlit as st
 import requests
 import sqlite3
