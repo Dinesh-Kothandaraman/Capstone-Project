@@ -141,7 +141,9 @@ def main():
     # Step 1: Fetch stock and news data
     st.write("🔄 Fetching stock data and news...")
     stock_docs = fetch_stock_data()
+    st.write("stock_data",stock_docs)
     news_docs = fetch_stock_news()
+    st.write("stock_news",news_docs)
 
     # Step 2: Load pre-generated QA pairs
     st.write("🔄 Loading QA pairs dataset...")
