@@ -6,6 +6,8 @@ import PyPDF2  # For PDF processing
 from langchain.schema import Document
 from docGPT import DocGPT
 
+#test
+
 # API Configuration
 STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
