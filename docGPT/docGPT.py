@@ -9,6 +9,8 @@ import torch
 
 class DocGPT:
     def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
+    # def __init__(self, docs, embedding_model="sentence-transformers/all-MiniLM-L6-v2"):
+    
         """
         Initializes DocGPT with a given dataset.
         Supports multiple document types: stock data, news articles, QA pairs.
@@ -41,7 +43,8 @@ class DocGPT:
         self._db = FAISS.from_documents(chunked_docs, embedding=embeddings)
         return self._db
 
-    def create_qa_chain(self, retriever_k=5, model_path="google/flan-t5-small"):
+    def create_qa_chain(self, retriever_k=5, model_path="google/flan-t5-base"):
+    # def create_qa_chain(self, retriever_k=5, model_path="facebook/bart-base"):
         """Sets up the RAG pipeline with an efficient retriever."""
         db = self._embeddings()
         retriever = db.as_retriever(search_kwargs={"k": retriever_k})
@@ -62,6 +65,31 @@ class DocGPT:
         self.qa_chain = RetrievalQA.from_chain_type(
             llm=local_llm, retriever=retriever, return_source_documents=False, verbose=False
         )
+
+    # def create_qa_chain(self, retriever_k=5, model_path="facebook/bart-large"):
+    #     """Sets up the RAG pipeline with an efficient retriever using a Facebook model."""
+    #     db = self._embeddings()
+    #     retriever = db.as_retriever(search_kwargs={"k": retriever_k})
+
+    #     # Load Tokenizer and Model Efficiently
+    #     tokenizer = AutoTokenizer.from_pretrained(model_path)
+
+    #     # Use correct model type based on Facebook's architecture
+    #     if "bart" in model_path:
+    #         model = AutoModelForSeq2SeqLM.from_pretrained(model_path, torch_dtype=torch.float16)
+    #         pipe = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
+    #     elif "opt" in model_path:
+    #         model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16)
+    #         pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
+    #     else:
+    #         raise ValueError("Unsupported Facebook model. Use a BART or OPT model.")
+
+    #     local_llm = HuggingFacePipeline(pipeline=pipe)
+
+    #     self.qa_chain = RetrievalQA.from_chain_type(
+    #         llm=local_llm, retriever=retriever, return_source_documents=False, verbose=False
+    #     )
+
 
     def run(self, query: str) -> str:
         """Processes user query and returns a generated response efficiently."""
