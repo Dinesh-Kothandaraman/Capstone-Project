@@ -2,20 +2,77 @@ import streamlit as st
 import requests
 import sqlite3
 import json
-import PyPDF2  # For PDF processing
+import matplotlib.pyplot as plt
 from langchain.schema import Document
 from docGPT import DocGPT
 
 # API Configuration
 STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
+
 NEWS_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real News API Key
 NEWS_API_URL = "https://www.alphavantage.co/query"
-QA_PAIRS_PATH = r"C:\Users\dines\OneDrive\Documents\GitHub\Capstone Project\Data\news_qa_pairs.json"
+
+QA_PAIRS_PATH = r"C:\Users\sriha\OneDrive\Documents\GitHub\Capstone-Project\Data\news_qa_pairs.json"  # Pre-generated QA file
 DATABASE = "question_history.db"
+
+# Fetch Stock Data from API
+def fetch_stock_data():
+    """Fetches real-time stock data from Alpha Vantage API."""
+    params = {
+        "function": "TIME_SERIES_MONTHLY",
+        "symbol": "IBM",
+        "apikey": STOCK_API_KEY
+    }
+    response = requests.get(STOCK_BASE_URL, params=params)
+    if response.status_code == 200:
+        stock_data = response.json()
+        time_series = stock_data.get("Monthly Time Series", {})
+        if not time_series:
+            st.warning("No stock data found.")
+            return []
+        return [Document(page_content=f"Stock Date: {date}\nStock Data: {json.dumps(data)}") for date, data in time_series.items()]
+    else:
+        st.error(f"Stock API request failed: {response.status_code}")
+        return []
+
+# Fetch Stock-Related News from API
+def fetch_stock_news():
+    """Fetches real-time stock-related news from Alpha Vantage API."""
+    params = {
+        "function": "NEWS_SENTIMENT",
+        "tickers": "AAPL",
+        "apikey": NEWS_API_KEY
+    }
+    response = requests.get(NEWS_API_URL, params=params)
+    if response.status_code == 200:
+        news_data = response.json()
+        articles = news_data.get("feed", [])
+        if not articles:
+            st.warning("No relevant news found.")
+            return []
+        return [
+            Document(page_content=f"News Title: {article['title']}\nSummary: {article['summary']}\nSentiment: {article['overall_sentiment_label']}")
+            for article in articles
+        ]
+    else:
+        st.error(f"News API request failed: {response.status_code}")
+        return []
+
+# Load Pre-generated QA Pairs
+def load_qa_pairs():
+    """Loads pre-generated QA pairs from the JSON file."""
+    try:
+        with open(QA_PAIRS_PATH, "r") as f:
+            qa_data = json.load(f)
+        return [Document(page_content=f"Q: {item['question']} A: {item['answer']}") for item in qa_data]
+    except Exception as e:
+        st.error(f"Error loading QA pairs: {e}")
+        return []
 
 # Initialize Database
 def initialize_database():
+    """Creates a database table if it doesn't exist."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("""
@@ -28,42 +85,65 @@ def initialize_database():
     conn.commit()
     conn.close()
 
-# Main Streamlit App
-def main():
-    st.title("📊 Stock & News QA System")
-
-    # Initialize database and load history
-    initialize_database()
-
-    # User query input
-    user_query = st.text_input("🔍 Ask a question about trends in stock data or news:")
-
-    # Visualize trends based on user query
-    if "trend" in user_query.lower():
-        # Example visualization (you need to replace this with actual data retrieval and processing logic)
-        data = {'Dates': ['2021-01-01', '2021-02-01', '2021-03-01'],
-                'Values': [100, 200, 300]}
-        df = pd.DataFrame(data)
-        st.line_chart(df.set_index('Dates'))
-
-        response = "Displayed trends for your query."
-        # Save to database (you might want to adjust this based on actual data processing)
-        conn = sqlite3.connect(DATABASE)
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO question_history (question, answer) VALUES (?, ?)", (user_query, response))
-        conn.commit()
-        conn.close()
-
-        st.write("**Response:**", response)
-
-    # Display question history
-    st.write("### 📜 Question History")
+# Load Question History from Database
+def load_history():
+    """Retrieves past user queries from the database."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("SELECT question, answer FROM question_history")
-    history = cursor.fetchall()
-    for i, (q, a) in enumerate(history, 1):
-        st.write(f"{i}. **Q:** {q}  \n   **A:** {a}")
+    history = [(row[0], row[1]) for row in cursor.fetchall()]
+    conn.close()
+    return history
+
+# Save User Query and Response to Database
+def save_to_history(question, answer):
+    """Stores the user's query and the model's response."""
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO question_history (question, answer) VALUES (?, ?)", (question, answer))
+    conn.commit()
+    conn.close()
+
+# Plot Stock Trends
+def plot_stock_trends(stock_data):
+    """Plots the stock closing prices over time."""
+    dates = []
+    close_prices = []
+    for date, data in stock_data.items():
+        dates.append(date)
+        close_prices.append(float(data['4. close']))
+    plt.figure(figsize=(10, 5))
+    plt.plot(dates, close_prices, marker='o', linestyle='-')
+    plt.title('Monthly Closing Prices for IBM')
+    plt.xlabel('Date')
+    plt.ylabel('Closing Price')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    st.pyplot(plt)
+
+# Main Streamlit App
+def main():
+    st.title("📊 Stock & News QA System (Two APIs + QA Pairs)")
+    initialize_database()
+    question_history = load_history()
+    stock_docs = fetch_stock_data()
+    news_docs = fetch_stock_news()
+    qa_docs = load_qa_pairs()
+    docs = stock_docs + news_docs + qa_docs
+    doc_gpt = DocGPT(docs)
+    query = st.text_input("🔍 Ask a question about stock data, news, or QA pairs:")
+    if query:
+        if 'trend' in query.lower():
+            stock_data = {date: json.loads(data['page_content'].split('\nStock Data: ')[1]) for date, data in enumerate(stock_docs)}
+            plot_stock_trends(stock_data)
+        response = doc_gpt.run(query)
+        save_to_history(query, response)
+        question_history.append((query, response))
+        st.write("**Answer:**", response)
+    if question_history:
+        st.write("### 📜 Question History")
+        for i, (q, a) in enumerate(question_history, 1):
+            st.write(f"{i}. **Q:** {q}  \n   **A:** {a}")
 
 if __name__ == "__main__":
     main()
