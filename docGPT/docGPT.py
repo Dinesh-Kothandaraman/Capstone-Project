@@ -147,19 +147,19 @@ class DocGPT:
             return "Error: QA chain not initialized. Please create the QA chain first."
 
         if "plot" in query.lower() or "graph" in query.lower() or "visualize" in query.lower():
-            stock_data = None
+            # stock_docs = None
             for doc in self.docs:
                 if "Monthly Time Series" in doc.page_content:
                     try:
                         json_data = json.loads(doc.page_content)
-                        stock_data = json_data.get("Monthly Time Series", {})
+                        stock_docs = json_data.get("Monthly Time Series", {})
                         break  # Use the first valid stock data found
                     except json.JSONDecodeError:
                         continue  # Skip invalid JSON
             
-            if not stock_data:
+            if not stock_docs:
                 return "No stock data available for visualization."
-            return {"image": self._generate_plot(stock_data)}
+            return {"image": self._generate_plot(stock_docs)}
         
         try:
             response = self.qa_chain(query)
