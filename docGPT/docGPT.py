@@ -94,38 +94,38 @@ class DocGPT:
     #         llm=local_llm, retriever=retriever, return_source_documents=False, verbose=False
     #     )
 
-    def _generate_plot(self, data):
-            plt.figure(figsize=(8, 5))
-            dates = list(data.keys())[:10]
-            values = [float(data[date]['1. open']) for date in dates]
-            plt.plot(dates, values, marker='o', linestyle='-', color='b')
-            plt.xlabel("Date")
-            plt.ylabel("Opening Price")
-            plt.title("Stock Opening Prices Over Time")
-            plt.xticks(rotation=45)
-            plt.grid()
+    # def _generate_plot(self, data):
+    #         plt.figure(figsize=(8, 5))
+    #         dates = list(data.keys())[:10]
+    #         values = [float(data[date]['1. open']) for date in dates]
+    #         plt.plot(dates, values, marker='o', linestyle='-', color='b')
+    #         plt.xlabel("Date")
+    #         plt.ylabel("Opening Price")
+    #         plt.title("Stock Opening Prices Over Time")
+    #         plt.xticks(rotation=45)
+    #         plt.grid()
             
-            img_buf = io.BytesIO()
-            plt.savefig(img_buf, format='png')
-            img_buf.seek(0)
-            return base64.b64encode(img_buf.getvalue()).decode('utf-8')
+    #         img_buf = io.BytesIO()
+    #         plt.savefig(img_buf, format='png')
+    #         img_buf.seek(0)
+    #         return base64.b64encode(img_buf.getvalue()).decode('utf-8')
     
-    # def run(self, query: str) -> str:
-    #     """Processes user query and returns a generated response efficiently."""
-    #     if not self.qa_chain:
-    #         return "Error: QA chain not initialized. Please create the QA chain first."
+    def run(self, query: str) -> str:
+        """Processes user query and returns a generated response efficiently."""
+        if not self.qa_chain:
+            return "Error: QA chain not initialized. Please create the QA chain first."
 
-    #     try:
-    #         print(f"Received Query: {query}")  # Debug line
-    #         response = self.qa_chain(query)
-    #         print(f"Response from Model: {response}")  # Debug line
+        try:
+            print(f"Received Query: {query}")  # Debug line
+            response = self.qa_chain(query)
+            print(f"Response from Model: {response}")  # Debug line
 
-    #         return response.get("result", "No answer generated.")
-    #     except Exception as e:
-    #         print(f"Error in run(): {e}")  # Debug error
-    #         return f"Error: {e}"
-    #     # response = self.qa_chain(query)
-    #     # return response.get("result", "No answer generated.")
+            return response.get("result", "No answer generated.")
+        except Exception as e:
+            print(f"Error in run(): {e}")  # Debug error
+            return f"Error: {e}"
+        # response = self.qa_chain(query)
+        # return response.get("result", "No answer generated.")
     # def run(self, query: str):
     #     if not self.qa_chain:
     #         return "Error: QA chain not initialized. Please create the QA chain first."
@@ -142,27 +142,27 @@ class DocGPT:
     #     except Exception as e:
     #         return f"Error: {e}"
 
-    def run(self, query: str):
-        if not self.qa_chain:
-            return "Error: QA chain not initialized. Please create the QA chain first."
+    # def run(self, query: str):
+    #     if not self.qa_chain:
+    #         return "Error: QA chain not initialized. Please create the QA chain first."
 
-        if "plot" in query.lower() or "graph" in query.lower() or "visualize" in query.lower():
-            # stock_docs = None
-            for doc in self.docs:
-                if "Monthly Time Series" in doc.page_content:
-                    try:
-                        json_data = json.loads(doc.page_content)
-                        stock_docs = json_data.get("Monthly Time Series", {})
-                        break  # Use the first valid stock data found
-                    except json.JSONDecodeError:
-                        continue  # Skip invalid JSON
+    #     if "plot" in query.lower() or "graph" in query.lower() or "visualize" in query.lower():
+    #         # stock_docs = None
+    #         for doc in self.docs:
+    #             if "Monthly Time Series" in doc.page_content:
+    #                 try:
+    #                     json_data = json.loads(doc.page_content)
+    #                     stock_docs = json_data.get("Monthly Time Series", {})
+    #                     break  # Use the first valid stock data found
+    #                 except json.JSONDecodeError:
+    #                     continue  # Skip invalid JSON
             
-            if not stock_docs:
-                return "No stock data available for visualization."
-            return {"image": self._generate_plot(stock_docs)}
+    #         if not stock_docs:
+    #             return "No stock data available for visualization."
+    #         return {"image": self._generate_plot(stock_docs)}
         
-        try:
-            response = self.qa_chain(query)
-            return response.get("result", "No answer generated.")
-        except Exception as e:
-            return f"Error: {e}"
+    #     try:
+    #         response = self.qa_chain(query)
+    #         return response.get("result", "No answer generated.")
+    #     except Exception as e:
+    #         return f"Error: {e}"

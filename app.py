@@ -9,8 +9,8 @@ import base64
 import matplotlib.pyplot as plt
 
 # API Configuration
-# STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
-STOCK_API_KEY = "demo"
+STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
+# STOCK_API_KEY = "demo"
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
 
 NEWS_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real News API Key
