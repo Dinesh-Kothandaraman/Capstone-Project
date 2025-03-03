@@ -6,6 +6,10 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, AutoModelForSeq2SeqLM
 from langchain.docstore.document import Document
 import torch
+import matplotlib.pyplot as plt
+import io
+import base64
+import json
 
 class DocGPT:
     def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
@@ -90,20 +94,75 @@ class DocGPT:
     #         llm=local_llm, retriever=retriever, return_source_documents=False, verbose=False
     #     )
 
+    def _generate_plot(self, data):
+            plt.figure(figsize=(8, 5))
+            dates = list(data.keys())[:10]
+            values = [float(data[date]['1. open']) for date in dates]
+            plt.plot(dates, values, marker='o', linestyle='-', color='b')
+            plt.xlabel("Date")
+            plt.ylabel("Opening Price")
+            plt.title("Stock Opening Prices Over Time")
+            plt.xticks(rotation=45)
+            plt.grid()
+            
+            img_buf = io.BytesIO()
+            plt.savefig(img_buf, format='png')
+            img_buf.seek(0)
+            return base64.b64encode(img_buf.getvalue()).decode('utf-8')
+    
+    # def run(self, query: str) -> str:
+    #     """Processes user query and returns a generated response efficiently."""
+    #     if not self.qa_chain:
+    #         return "Error: QA chain not initialized. Please create the QA chain first."
 
-    def run(self, query: str) -> str:
-        """Processes user query and returns a generated response efficiently."""
+    #     try:
+    #         print(f"Received Query: {query}")  # Debug line
+    #         response = self.qa_chain(query)
+    #         print(f"Response from Model: {response}")  # Debug line
+
+    #         return response.get("result", "No answer generated.")
+    #     except Exception as e:
+    #         print(f"Error in run(): {e}")  # Debug error
+    #         return f"Error: {e}"
+    #     # response = self.qa_chain(query)
+    #     # return response.get("result", "No answer generated.")
+    # def run(self, query: str):
+    #     if not self.qa_chain:
+    #         return "Error: QA chain not initialized. Please create the QA chain first."
+
+    #     if "plot" in query.lower() or "graph" in query.lower() or "visualize" in query.lower():
+    #         stock_data = {doc.page_content.split('\n')[0]: json.loads(doc.page_content.split('\n')[1]) for doc in self.docs if "Stock Date:" in doc.page_content}
+    #         if not stock_data:
+    #             return "No stock data available for visualization."
+    #         return {"image": self._generate_plot(stock_data)}
+        
+    #     try:
+    #         response = self.qa_chain(query)
+    #         return response.get("result", "No answer generated.")
+    #     except Exception as e:
+    #         return f"Error: {e}"
+
+    def run(self, query: str):
         if not self.qa_chain:
             return "Error: QA chain not initialized. Please create the QA chain first."
 
+        if "plot" in query.lower() or "graph" in query.lower() or "visualize" in query.lower():
+            stock_data = None
+            for doc in self.docs:
+                if "Monthly Time Series" in doc.page_content:
+                    try:
+                        json_data = json.loads(doc.page_content)
+                        stock_data = json_data.get("Monthly Time Series", {})
+                        break  # Use the first valid stock data found
+                    except json.JSONDecodeError:
+                        continue  # Skip invalid JSON
+            
+            if not stock_data:
+                return "No stock data available for visualization."
+            return {"image": self._generate_plot(stock_data)}
+        
         try:
-            print(f"Received Query: {query}")  # Debug line
             response = self.qa_chain(query)
-            print(f"Response from Model: {response}")  # Debug line
-
             return response.get("result", "No answer generated.")
         except Exception as e:
-            print(f"Error in run(): {e}")  # Debug error
             return f"Error: {e}"
-        # response = self.qa_chain(query)
-        # return response.get("result", "No answer generated.")

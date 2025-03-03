@@ -5,6 +5,8 @@ import json
 import PyPDF2  # For PDF processing
 from langchain.schema import Document
 from docGPT import DocGPT
+import base64
+import matplotlib.pyplot as plt
 
 # API Configuration
 STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
@@ -130,6 +132,10 @@ def save_to_history(question, answer):
     conn.commit()
     conn.close()
 
+def display_image(encoded_image):
+    img_bytes = base64.b64decode(encoded_image)
+    st.image(img_bytes, caption="Generated Visualization", use_column_width=True)
+
 # Main Streamlit App
 def main():
     st.title("📊 Stock & News QA System (Two APIs + QA Pairs + Optional Documents)")
@@ -187,9 +193,12 @@ def main():
 
         if query:
             response = st.session_state.doc_gpt.run(query)
-            save_to_history(query, response)
-            question_history.append((query, response))
-            st.write("**Answer:**", response)
+            if isinstance(response, dict) and "image" in response:
+                display_image(response["image"])
+            else:
+                save_to_history(query, response)
+                question_history.append((query, response))
+                st.write("**Answer:**", response)
 
     # Display question history
     if question_history:
