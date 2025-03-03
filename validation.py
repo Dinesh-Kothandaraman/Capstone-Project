@@ -36,9 +36,9 @@ def evaluate_model(doc_gpt, eval_data):
         
         generated_answer = doc_gpt.run(question).strip()
 
-        print(f"Q{idx}: {question}")
-        print(f"Expected: {expected_answer}")
-        print(f"Generated: {generated_answer}\n")
+        # print(f"Q{idx}: {question}")
+        # print(f"Expected: {expected_answer}")
+        # print(f"Generated: {generated_answer}\n")
 
         if generated_answer.lower() == expected_answer.lower():
             correct += 1
