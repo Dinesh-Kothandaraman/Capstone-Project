@@ -1,78 +1,21 @@
 import streamlit as st
+import pandas as pd
+import plotly.express as px
 import requests
 import sqlite3
 import json
-import matplotlib.pyplot as plt
-from langchain.schema import Document
-from docGPT import DocGPT
+import PyPDF2
 
 # API Configuration
 STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
-
 NEWS_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real News API Key
 NEWS_API_URL = "https://www.alphavantage.co/query"
-
-QA_PAIRS_PATH = r"C:\Users\sriha\OneDrive\Documents\GitHub\Capstone-Project\Data\news_qa_pairs.json"  # Pre-generated QA file
+QA_PAIRS_PATH = r"C:\Users\sriha\OneDrive\Documents\GitHub\Capstone-Project\Data\news_qa_pairs.json"
 DATABASE = "question_history.db"
-
-# Fetch Stock Data from API
-def fetch_stock_data():
-    """Fetches real-time stock data from Alpha Vantage API."""
-    params = {
-        "function": "TIME_SERIES_MONTHLY",
-        "symbol": "IBM",
-        "apikey": STOCK_API_KEY
-    }
-    response = requests.get(STOCK_BASE_URL, params=params)
-    if response.status_code == 200:
-        stock_data = response.json()
-        time_series = stock_data.get("Monthly Time Series", {})
-        if not time_series:
-            st.warning("No stock data found.")
-            return []
-        return [Document(page_content=f"Stock Date: {date}\nStock Data: {json.dumps(data)}") for date, data in time_series.items()]
-    else:
-        st.error(f"Stock API request failed: {response.status_code}")
-        return []
-
-# Fetch Stock-Related News from API
-def fetch_stock_news():
-    """Fetches real-time stock-related news from Alpha Vantage API."""
-    params = {
-        "function": "NEWS_SENTIMENT",
-        "tickers": "AAPL",
-        "apikey": NEWS_API_KEY
-    }
-    response = requests.get(NEWS_API_URL, params=params)
-    if response.status_code == 200:
-        news_data = response.json()
-        articles = news_data.get("feed", [])
-        if not articles:
-            st.warning("No relevant news found.")
-            return []
-        return [
-            Document(page_content=f"News Title: {article['title']}\nSummary: {article['summary']}\nSentiment: {article['overall_sentiment_label']}")
-            for article in articles
-        ]
-    else:
-        st.error(f"News API request failed: {response.status_code}")
-        return []
-
-# Load Pre-generated QA Pairs
-def load_qa_pairs():
-    """Loads pre-generated QA pairs from the JSON file."""
-    try:
-        with open(QA_PAIRS_PATH, "r") as f:
-            qa_data = json.load(f)
-        return [Document(page_content=f"Q: {item['question']} A: {item['answer']}") for item in qa_data]
-    except Exception as e:
-        st.error(f"Error loading QA pairs: {e}")
-        return []
 
 # Initialize Database
 def initialize_database():
-    """Creates a database table if it doesn't exist."""
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("""
@@ -85,65 +28,81 @@ def initialize_database():
     conn.commit()
     conn.close()
 
-# Load Question History from Database
-def load_history():
-    """Retrieves past user queries from the database."""
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute("SELECT question, answer FROM question_history")
-    history = [(row[0], row[1]) for row in cursor.fetchall()]
-    conn.close()
-    return history
+# Function to read uploaded document
+def extract_text_from_file(uploaded_file):
+    if uploaded_file is not None:
+        file_extension = uploaded_file.name.split(".")[-1].lower()
+        
+        if file_extension == "txt":
+            return uploaded_file.read().decode("utf-8")
+        elif file_extension == "pdf":
+            pdf_reader = PyPDF2.PdfReader(uploaded_file)
+            return "\n".join([page.extract_text() for page in pdf_reader.pages if page.extract_text()])
+        else:
+            st.error("Unsupported file format. Please upload a .txt or .pdf file.")
+            return None
+    return None
 
-# Save User Query and Response to Database
-def save_to_history(question, answer):
-    """Stores the user's query and the model's response."""
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO question_history (question, answer) VALUES (?, ?)", (question, answer))
-    conn.commit()
-    conn.close()
+# Fetch Stock Data from API
+def fetch_stock_data(symbol="IBM"):
+    params = {
+        "function": "TIME_SERIES_MONTHLY",
+        "symbol": symbol,
+        "apikey": STOCK_API_KEY
+    }
+    response = requests.get(STOCK_BASE_URL, params=params)
+    if response.status_code == 200:
+        stock_data = response.json().get("Monthly Time Series", {})
+        if not stock_data:
+            st.warning("No stock data found.")
+            return pd.DataFrame()
+        df = pd.DataFrame([
+            {"date": date, "close": float(data["4. close"])}
+            for date, data in stock_data.items()
+        ]).sort_values("date")
+        return df
+    else:
+        st.error(f"Stock API request failed: {response.status_code}")
+        return pd.DataFrame()
 
-# Plot Stock Trends
-def plot_stock_trends(stock_data):
-    """Plots the stock closing prices over time."""
-    dates = []
-    close_prices = []
-    for date, data in stock_data.items():
-        dates.append(date)
-        close_prices.append(float(data['4. close']))
-    plt.figure(figsize=(10, 5))
-    plt.plot(dates, close_prices, marker='o', linestyle='-')
-    plt.title('Monthly Closing Prices for IBM')
-    plt.xlabel('Date')
-    plt.ylabel('Closing Price')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    st.pyplot(plt)
+# Visualization of stock data
+def plot_stock_data(df, symbol):
+    if not df.empty:
+        fig = px.line(df, x='date', y='close', title=f'Monthly Closing Prices for {symbol}')
+        fig.update_xaxes(rangeslider_visible=True)
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.write("No data to display.")
 
 # Main Streamlit App
 def main():
-    st.title("📊 Stock & News QA System (Two APIs + QA Pairs)")
+    st.title("📊 Enhanced Stock & News Dashboard")
+
+    # Sidebar for user inputs
+    with st.sidebar:
+        st.header("Configuration")
+        stock_symbol = st.selectbox("Select a stock symbol", ["IBM", "AAPL", "GOOGL", "MSFT"], index=0)
+        document_uploaded = st.file_uploader("Upload a document (TXT or PDF)", type=["txt", "pdf"])
+
+    # Database initialization and history loading
     initialize_database()
-    question_history = load_history()
-    stock_docs = fetch_stock_data()
-    news_docs = fetch_stock_news()
-    qa_docs = load_qa_pairs()
-    docs = stock_docs + news_docs + qa_docs
-    doc_gpt = DocGPT(docs)
-    query = st.text_input("🔍 Ask a question about stock data, news, or QA pairs:")
-    if query:
-        if 'trend' in query.lower():
-            stock_data = {date: json.loads(data['page_content'].split('\nStock Data: ')[1]) for date, data in enumerate(stock_docs)}
-            plot_stock_trends(stock_data)
-        response = doc_gpt.run(query)
-        save_to_history(query, response)
-        question_history.append((query, response))
-        st.write("**Answer:**", response)
-    if question_history:
-        st.write("### 📜 Question History")
-        for i, (q, a) in enumerate(question_history, 1):
-            st.write(f"{i}. **Q:** {q}  \n   **A:** {a}")
+
+    # Data fetching and plotting
+    if st.button("Fetch and Visualize Stock Data"):
+        stock_data = fetch_stock_data(stock_symbol)
+        plot_stock_data(stock_data, stock_symbol)
+
+    # Handling uploaded documents
+    if document_uploaded:
+        extracted_text = extract_text_from_file(document_uploaded)
+        if extracted_text:
+            st.text_area("Extracted Text", extracted_text, height=300)
+
+    # Handling user queries and displaying history from database (Example placeholder)
+    user_query = st.text_input("Enter your question about the stock market:")
+    if user_query:
+        st.write("Response will be generated here...")  # Placeholder for actual response logic
 
 if __name__ == "__main__":
     main()
+
