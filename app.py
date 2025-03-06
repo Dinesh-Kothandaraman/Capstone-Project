@@ -9,11 +9,11 @@ import base64
 import matplotlib.pyplot as plt
 
 # API Configuration
-STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
-# STOCK_API_KEY = "demo"
+# STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
+STOCK_API_KEY = "demo"
 STOCK_BASE_URL = "https://www.alphavantage.co/query"
 
-NEWS_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real News API Key
+NEWS_API_KEY = "demo"  # Replace with your real News API Key
 NEWS_API_URL = "https://www.alphavantage.co/query"
 
 QA_PAIRS_PATH = r"C:\Users\dines\OneDrive\Documents\GitHub\Capstone Project\Data\news_qa_pairs.json"  # Pre-generated QA file
@@ -148,9 +148,9 @@ def main():
     # Step 1: Fetch stock and news data
     st.write("🔄 Fetching stock data and news...")
     stock_docs = fetch_stock_data()
-    st.write("stock_data",stock_docs)
+    # st.write("stock_data",stock_docs)
     news_docs = fetch_stock_news()
-    st.write("stock_news",news_docs)
+    # st.write("stock_news",news_docs)
 
     # Step 2: Load pre-generated QA pairs
     st.write("🔄 Loading QA pairs dataset...")
@@ -177,7 +177,8 @@ def main():
 
     if st.button("🚀 Process Data and Train Model"):
         docs = stock_docs + news_docs + qa_docs + uploaded_docs
-
+        # docs = qa_docs
+        st.write(docs)
         if not docs:
             st.error("No data available for training.")
             return
