@@ -186,6 +186,7 @@ def main():
         # Train the DocGPT model with API stock data, news articles, and QA pairs
         st.write("🧠 Training model with API data + QA pairs...")
         st.session_state.doc_gpt = DocGPT(docs)
+        st.write("Processing data...")
         st.session_state.doc_gpt.create_qa_chain()
         st.success("✅ Training complete!")
 
