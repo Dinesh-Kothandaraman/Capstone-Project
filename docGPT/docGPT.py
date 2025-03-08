@@ -116,7 +116,7 @@ import json
 
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
-from torch.utils.data import DataLoader, Dataset, random_split
+from torch.utils.data import DataLoader, Dataset, random_split, TensorDataset
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import json
@@ -128,6 +128,42 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import HuggingFacePipeline
 from transformers import pipeline
 import streamlit as st
+
+class TextDataset(Dataset):
+    def __init__(self, tokenizer, dataset_x, dataset_y, max_length=512):
+        self.tokenizer = tokenizer
+        self.dataset_x = dataset_x
+        self.dataset_y = dataset_y
+        self.max_length = max_length
+
+    def __len__(self):
+        return len(self.dataset_x)
+
+    def __getitem__(self, idx):
+        input_text = self.dataset_x[idx]
+        target_text = self.dataset_y[idx]
+
+        encoding = self.tokenizer(
+            input_text,
+            padding="max_length",
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt"
+        )
+        target_encoding = self.tokenizer(
+            target_text,
+            padding="max_length",
+            truncation=True,
+            max_length=self.max_length,
+            return_tensors="pt"
+        )
+
+        return {
+            "input_ids": encoding["input_ids"].squeeze(0),
+            "attention_mask": encoding["attention_mask"].squeeze(0),
+            "labels": target_encoding["input_ids"].squeeze(0),
+        }
+
 
 class DocGPT:
     def __init__(self, docs, model_path="google/flan-t5-base", embedding_model="BAAI/bge-large-en", epochs=5, batch_size=4):
@@ -195,174 +231,197 @@ class DocGPT:
 
     # def train_model(self):
     #     st.write("Training the model...")
-    #     """Train the model and capture training & validation loss."""
-    #     dataset = []
-    #     # st.write("docs", self.docs)
+        
+    #     dataset_x= []
+    #     dataset_y = []
+
     #     for doc in self.docs:
     #         content = doc.page_content.strip()
+    #         # st.write("Training Data Sample:", content[:300])  # Show first 300 chars
 
-    #         # st.write("content", content)
-    #         try:
-    #             parsed_content = json.loads(content)
-    #             st.write("parsed_content", parsed_content)
-    #             # Check if the parsed content contains "question" and "answer" keys
-    #             if "question" in parsed_content and "answer" in parsed_content:
-    #                 # dataset.append((parsed_content["question"], parsed_content["answer"]))
-    #                 question = parsed_content.get("question", None)
-    #                 answer = parsed_content.get("answer", None)
-    #                 if question and answer:
-    #                     dataset.append((question, answer))
-    #                 else:
-    #                     dataset.append((content, content)) # Use content as both input and target
-    #             else:
-    #                 dataset.append((content, content))  # Use content as both input and target
-    #         except json.JSONDecodeError:
-    #             st.write("content is not JSON, treating as raw text")
-    #             dataset.append((content, content))  # Handle raw text files properly
+    #         # Extract input-target pairs
+    #         if content.startswith("Q:") and " A: " in content:
+    #             question, answer = content.split(" A: ", 1)  # Split into (Q, A)
+    #             # st.write("question", question)
+    #             # st.write("answer", answer)
+    #             dataset_x.append(question)
+    #             dataset_y.append(answer)
+
+    #         # Handle stock data separately
+    #         elif "Stock Date" in content and "Stock Data" in content:
+    #             date = content.split(" ")[2]  # Extract stock date
+    #             question = f"What was the stock data on {date}?"
+    #             # st.write("question", question)
+    #             # st.write("content", content)
+    #             # st.write("date", date)
+    #             dataset_x.append(question)
+    #             dataset_y.append(content)
+
+    #         # Handle news data separately
+    #         elif "News Title:" in content:
+    #             question = "Summarize this news article."
+    #             # st.write("question", question)
+    #             # st.write("content", content)
+    #             dataset_x.append(question)
+    #             dataset_y.append(content)
+                
+
+    #         # Default case (self-supervised learning)
+    #         else:
+    #             dataset_x.append(content)
+    #             dataset_y.append(content)
+    #             # dataset.append((content, content))  # Use the text itself as both input and target
+    #             # st.write("dataset", dataset)
+    #             # st.write("dataset", dataset)
+
+
+    #     # if not dataset:
+    #     #     raise ValueError("No valid data found for training!")
         
-    #     if not dataset:
-    #         raise ValueError("No valid data found for training!")
-    #     st.write("dataset", dataset)
+    #     # st.write("dataset2", dataset)
+
+    #     # st.write(f"Total training samples: {len(dataset)}")
         
+    #     # Split into training and validation sets
+    #     # st.write("dataset shape",dataset[0])
+    #     dataset_x = torch.tensor(dataset_x, dtype=torch.float32)
+    #     dataset_y = torch.tensor(dataset_y, dtype=torch.float32)
+    #     dataset = TensorDataset(dataset_x, dataset_y) 
     #     train_size = int(0.8 * len(dataset))
     #     val_size = len(dataset) - train_size
-    #     st.write("train_size", train_size)
-    #     st.write("val_size", val_size)  
     #     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
-    #     st.write("train_dataset", train_dataset)
-    #     st.write("val_dataset", val_dataset)    
+
     #     optimizer = optim.AdamW(self.model.parameters(), lr=5e-5)
-    #     training_losses, validation_losses = [], []
-    #     training_accuracies, validation_accuracies = [], []
+    #     training_losses = []
 
     #     for epoch in range(self.epochs):
     #         self.model.train()
     #         total_train_loss = 0
-    #         correct_train = 0
-    #         total_train = 0
 
-    #         for input_text, target_text in train_dataset:
-    #             encoding = self.tokenizer(input_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt")
-    #             target_encoding = self.tokenizer(target_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt")
-    #             if encoding["input_ids"].shape[1] == 0:
-    #                 continue  # Skip empty tokenized inputs
+    #         for data in train_dataset:
+    #             if len(data) != 2:  # Ensure all data is in (input, target) format
+    #                 st.write("Skipping invalid data entry:", data)
+    #                 continue
+                
+    #             input_text, target_text = data  # Safe unpacking
+
+    #             encoding = self.tokenizer(
+    #                 input_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt"
+    #             )
+    #             target_encoding = self.tokenizer(
+    #                 target_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt"
+    #             )
+
+    #             # Move tensors to the correct device
     #             input_ids = encoding["input_ids"].squeeze().to(self.device)
-    #             st.write("input_ids", input_ids)
     #             attention_mask = encoding["attention_mask"].squeeze().to(self.device)
     #             labels = target_encoding["input_ids"].squeeze().to(self.device)
+
     #             outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-    #             st.write("outputs", outputs)
     #             loss = outputs.loss
     #             loss.backward()
     #             optimizer.step()
     #             optimizer.zero_grad()
+
     #             total_train_loss += loss.item()
-            
+
     #         avg_train_loss = total_train_loss / len(train_dataset)
     #         training_losses.append(avg_train_loss)
-    #         print(f"Epoch {epoch+1}/{self.epochs}, Training Loss: {avg_train_loss:.4f}")
-        
+    #         st.write(f"Epoch {epoch+1}/{self.epochs}, Training Loss: {avg_train_loss:.4f}")
+
     #     self._plot_metrics(training_losses)
 
+
+    # def _plot_metrics(self, training_losses):
+    #     """Plot Training Loss."""
+    #     plt.figure(figsize=(8, 5))
+    #     plt.plot(training_losses, label="Training Loss", marker="o")
+    #     plt.xlabel("Epochs")
+    #     plt.ylabel("Loss")
+    #     plt.legend()
+    #     plt.show()
+
+
     def train_model(self):
-        st.write("Training the model...")
-        
-        dataset = []
+            st.write("Training the model...")
 
-        for doc in self.docs:
-            content = doc.page_content.strip()
-            # st.write("Training Data Sample:", content[:300])  # Show first 300 chars
+            dataset_x = []
+            dataset_y = []
 
-            # Extract input-target pairs
-            if content.startswith("Q:") and " A: " in content:
-                question, answer = content.split(" A: ", 1)  # Split into (Q, A)
-                # st.write("question", question)
-                # st.write("answer", answer)
-                dataset.append((question, answer))
+            # Extract training pairs from the provided documents
+            for doc in self.docs:
+                content = doc.page_content.strip()
 
-            # Handle stock data separately
-            elif "Stock Date" in content and "Stock Data" in content:
-                date = content.split(" ")[2]  # Extract stock date
-                question = f"What was the stock data on {date}?"
-                # st.write("question", question)
-                # st.write("content", content)
-                # st.write("date", date)
-                dataset.append((question, content))
+                if content.startswith("Q:") and " A: " in content:
+                    question, answer = content.split(" A: ", 1)
+                    dataset_x.append(question)
+                    dataset_y.append(answer)
 
-            # Handle news data separately
-            elif "News Title:" in content:
-                question = "Summarize this news article."
-                # st.write("question", question)
-                # st.write("content", content)
-                dataset.append((question, content))  # Teach model to generate full news
+                elif "Stock Date" in content and "Stock Data" in content:
+                    date = content.split(" ")[2]  # Extract stock date
+                    question = f"What was the stock data on {date}?"
+                    dataset_x.append(question)
+                    dataset_y.append(content)
 
-            # Default case (self-supervised learning)
-            else:
-                dataset.append((content, content))  # Use the text itself as both input and target
-                # st.write("dataset", dataset)
-                # st.write("dataset", dataset)
+                elif "News Title:" in content:
+                    question = "Summarize this news article."
+                    dataset_x.append(question)
+                    dataset_y.append(content)
 
+                else:
+                    dataset_x.append(content)
+                    dataset_y.append(content)
 
-        if not dataset:
-            raise ValueError("No valid data found for training!")
-        
-        st.write("dataset2", dataset)
+            if not dataset_x or not dataset_y:
+                raise ValueError("No valid data found for training!")
 
-        st.write(f"Total training samples: {len(dataset)}")
-        
-        # Split into training and validation sets
-        st.write("dataset shape",dataset[0])
-        train_size = int(0.8 * len(dataset))
-        val_size = len(dataset) - train_size
-        train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+            # Create dataset using the tokenizer
+            dataset = TextDataset(self.tokenizer, dataset_x, dataset_y)
 
-        optimizer = optim.AdamW(self.model.parameters(), lr=5e-5)
-        training_losses = []
+            # Split dataset into training and validation sets
+            train_size = int(0.8 * len(dataset))
+            val_size = len(dataset) - train_size
+            train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-        for epoch in range(self.epochs):
-            self.model.train()
-            total_train_loss = 0
+            # Create data loaders
+            train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
+            val_loader = DataLoader(val_dataset, batch_size=self.batch_size, shuffle=False)
 
-            for data in train_dataset:
-                if len(data) != 2:  # Ensure all data is in (input, target) format
-                    st.write("Skipping invalid data entry:", data)
-                    continue
-                
-                input_text, target_text = data  # Safe unpacking
+            optimizer = optim.AdamW(self.model.parameters(), lr=5e-5)
+            training_losses = []
 
-                encoding = self.tokenizer(
-                    input_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt"
-                )
-                target_encoding = self.tokenizer(
-                    target_text, padding="max_length", truncation=True, max_length=512, return_tensors="pt"
-                )
+            # Training loop
+            for epoch in range(self.epochs):
+                self.model.train()
+                total_train_loss = 0
 
-                # Move tensors to the correct device
-                input_ids = encoding["input_ids"].squeeze().to(self.device)
-                attention_mask = encoding["attention_mask"].squeeze().to(self.device)
-                labels = target_encoding["input_ids"].squeeze().to(self.device)
+                for batch in train_loader:
+                    input_ids = batch["input_ids"].to(self.device)
+                    attention_mask = batch["attention_mask"].to(self.device)
+                    labels = batch["labels"].to(self.device)
 
-                outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-                loss = outputs.loss
-                loss.backward()
-                optimizer.step()
-                optimizer.zero_grad()
+                    optimizer.zero_grad()
+                    outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+                    loss = outputs.loss
+                    loss.backward()
+                    optimizer.step()
 
-                total_train_loss += loss.item()
+                    total_train_loss += loss.item()
 
-            avg_train_loss = total_train_loss / len(train_dataset)
-            training_losses.append(avg_train_loss)
-            st.write(f"Epoch {epoch+1}/{self.epochs}, Training Loss: {avg_train_loss:.4f}")
+                avg_train_loss = total_train_loss / len(train_loader)
+                training_losses.append(avg_train_loss)
+                st.write(f"Epoch {epoch+1}/{self.epochs}, Training Loss: {avg_train_loss:.4f}")
 
-        self._plot_metrics(training_losses)
-
+            self._plot_metrics(training_losses)
 
     def _plot_metrics(self, training_losses):
-        """Plot Training Loss."""
-        plt.figure(figsize=(8, 5))
-        plt.plot(training_losses, label="Training Loss", marker="o")
+        import matplotlib.pyplot as plt
+
+        plt.figure(figsize=(6, 4))
+        plt.plot(range(1, len(training_losses) + 1), training_losses, marker="o", linestyle="-", label="Training Loss")
         plt.xlabel("Epochs")
         plt.ylabel("Loss")
+        plt.title("Training Loss Over Time")
         plt.legend()
-        plt.show()
-
+        plt.grid()
+        st.pyplot(plt)
