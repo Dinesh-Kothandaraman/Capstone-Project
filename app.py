@@ -198,6 +198,7 @@ def main():
             response = st.session_state.doc_gpt.run(query)
             if isinstance(response, dict) and "image" in response:
                 display_image(response["image"])
+                st.write("**Answer:**", response.get("result", "No answer generated."))
             else:
                 save_to_history(query, response)
                 question_history.append((query, response))
