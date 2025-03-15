@@ -133,9 +133,12 @@ def save_to_history(question, answer):
     conn.commit()
     conn.close()
 
-def display_image(encoded_image):
-    img_bytes = base64.b64decode(encoded_image)
-    st.image(img_bytes, caption="Generated Visualization", use_column_width=True)
+def execute_code(code):
+    """Safely executes the generated Python visualization code."""
+    try:
+        exec(code, globals())
+    except Exception as e:
+        st.error(f"Error executing code: {e}")
 
 # Main Streamlit App
 def main():
@@ -194,15 +197,26 @@ def main():
     if st.session_state.doc_gpt is not None:
         query = st.text_input("🔍 Ask a question about stock data, news, or QA pairs:")
 
+        # if query:
+        #     response = st.session_state.doc_gpt.run(query)
+        #     if isinstance(response, dict) and "image" in response:
+        #         display_image(response["image"])
+        #         st.write("**Answer:**", response.get("result", "No answer generated."))
+        #     else:
+        #         save_to_history(query, response)
+        #         question_history.append((query, response))
+        #         st.write("**Answer:**", response)
+
         if query:
             response = st.session_state.doc_gpt.run(query)
-            if isinstance(response, dict) and "image" in response:
-                display_image(response["image"])
-                st.write("**Answer:**", response.get("result", "No answer generated."))
+
+            if isinstance(response, dict) and "code" in response:
+                st.subheader("📝 Generated Code:")
+                st.code(response["code"], language="python")
+                execute_code(response["code"])  # Run and display the visualization
             else:
-                save_to_history(query, response)
-                question_history.append((query, response))
-                st.write("**Answer:**", response)
+                st.subheader("📖 Answer:")
+                st.write(response)
 
     # Display question history
     if question_history:
