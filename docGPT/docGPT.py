@@ -16,10 +16,13 @@ import base64
 import json
 from io import BytesIO
 import chat2plot as c2p
+import ast
+import re
 
 # saved_model = r"C:\Users\dines\Downloads\Capstone_model"
+# token = "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"
 class DocGPT:
-    def __init__(self, docs, embedding_model="BAAI/bge-large-en",model_name=r"D:\New folder"):
+    def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
     # def __init__(self, docs, embedding_model="sentence-transformers/all-MiniLM-L6-v2"):
     
         """
@@ -29,7 +32,11 @@ class DocGPT:
         self.docs = docs
         self.qa_chain = None
         self.embedding_model = embedding_model
-        self._llm = pipeline("text-generation", model=model_name, max_new_tokens=256)
+        # self._llm = pipeline("text2text-generation", model=model_name, max_new_tokens=256)
+        # self._llm = pipeline("text-generation", model="EleutherAI/gpt-neo-2.7B", max_new_tokens=256)
+        self._llm = pipeline("text-generation", model="Salesforce/codegen2-1B", max_new_tokens=256)
+
+        # self._llm =None
         self._db = None  # Store FAISS DB to avoid recomputation
 
     def _preprocess_docs(self):
@@ -89,21 +96,120 @@ class DocGPT:
     #         print(f"Error in run(): {e}")  # Debug error
     #         return f"Error: {e}"
 
+    # def generate_visualization_code(self, query):
+    #     """Generates Python code for a visualization based on the query."""
+    #     response = self.qa_chain(query)
+    #     st.write("response1", response)
+
+    #     # Extract relevant stock data from response
+    #     if isinstance(response, dict) and "result" in response:
+    #         stock_data = response["result"]
+    #     else:
+    #         return {"error": "Invalid response format. Expected a dictionary with a 'result' key."}
+
+    #     prompt = (
+    #         f"You are an expert in Python data visualization. "
+    #         f"Given the query: '{query}', "
+    #         f"and the stock data: '{stock_data}', generate a Python script using Matplotlib and Pandas. "
+    #         f"Ensure it loads or creates sample data, creates an appropriate visualization, labels the axes, "
+    #         f"adds a title, and uses professional formatting. Only return the Python code without explanation."
+    #     )
+
+    #     st.write("**Generating visualization code...**")
+
+    #     try:
+    #         response = self._llm(prompt)
+    #         st.write("response", response)
+
+    #         # Extract generated text correctly
+    #         if isinstance(response, list) and len(response) > 0:
+    #             code = response[0].get("generated_text", "").strip()
+    #         elif isinstance(response, dict):
+    #             code = response.get("generated_text", "").strip()
+    #         else:
+    #             code = str(response).strip()
+
+    #         # Validate if it's a valid Python script
+    #         try:
+    #             ast.parse(code)  # Check for syntax errors
+    #         except SyntaxError as e:
+    #             return {"error": f"Syntax Error in generated code: {e}"}
+
+    #         return {"code": code}
+
+    #     except Exception as e:
+    #         return {"error": f"Code generation failed: {e}"}
+
+    def extract_python_code(self,response):
+        """Extracts Python code from the model's response."""
+        if isinstance(response, list) and len(response) > 0:
+            full_text = response[0].get("generated_text", "").strip()
+        elif isinstance(response, dict):
+            full_text = response.get("generated_text", "").strip()
+        else:
+            return {"error": "Invalid response format."}
+
+        # Try extracting code with regex
+        code_match = re.search(r"```python\n(.*?)\n```", full_text, re.DOTALL)
+        if code_match:
+            code = code_match.group(1).strip()
+        else:
+            # Fallback: Extract lines that look like Python code
+            lines = full_text.split("\n")
+            code_lines = [
+                line for line in lines
+                if line.strip().startswith(("import", "from", "plt.", "df.", "fig", "ax", "pd."))
+            ]
+            code = "\n".join(code_lines).strip()
+
+        if not code:
+            return {"error": "No valid Python code found in response."}
+
+        # Validate syntax
+        try:
+            ast.parse(code)  # Check for syntax errors
+            return {"code": code}
+        except SyntaxError as e:
+            return {"error": f"Syntax Error in generated code: {e}"}
+
+
     def generate_visualization_code(self, query):
         """Generates Python code for a visualization based on the query."""
-        prompt = f"""
-        You are an expert in Python data visualization. Given the following query:
-        "{query}"
-        Generate a Python script using Matplotlib and Pandas that:
-        - Loads or creates sample data if necessary.
-        - Creates an appropriate visualization.
-        - Labels the axes and adds a title.
-        - Uses clear and professional formatting.
-        Only return the Python code without explanation.
-        """
+        response = self.qa_chain(query)
+        st.write("response1", response)
+
+        # Extract relevant stock data from response
+        if isinstance(response, dict) and "result" in response:
+            stock_data = response["result"]
+        else:
+            return {"error": "Invalid response format. Expected a dictionary with a 'result' key."}
+
+        prompt = (
+            f"You are an expert in Python data visualization. "
+            f"Given the following stock data:\n"
+            f"'{stock_data}'\n"
+            f"Generate a Python script that does the following:\n"
+            f"1. Loads the data using pandas (or creates a small sample dataframe if necessary).\n"
+            f"2. Uses Matplotlib to visualize the stock's open, high, low, and close prices.\n"
+            f"3. Labels the axes and adds a title.\n"
+            f"4. Formats the chart professionally.\n\n"
+            f"**Output only the Python code** without any extra explanation. "
+            f"Do not include markdown formatting or any text outside the script."
+        )        # st.write("**Generating visualization code...**")
+
         st.write("**Generating visualization code...**")
-        response = self._llm(prompt)  # Directly pass the prompt string
-        return response[0]["generated_text"] 
+
+        try:
+            response = self._llm(prompt)
+            st.write("response", response)
+
+            # Extract clean Python code
+            return self.extract_python_code(response)
+
+        except Exception as e:
+            return {"error": f"Code generation failed: {e}"}
+
+
 
     def run(self, query):
         """Processes the query and determines if it's a visualization request or a QA request."""
