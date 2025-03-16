@@ -20,7 +20,7 @@ import ast
 import re
 
 # saved_model = r"C:\Users\dines\Downloads\Capstone_model"
-# token = "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"
+
 class DocGPT:
     def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
     # def __init__(self, docs, embedding_model="sentence-transformers/all-MiniLM-L6-v2"):
