@@ -227,6 +227,8 @@ def main():
                 execute_code(response["code"])  # Run and display the visualization
             else:
                 st.subheader("📖 Answer:")
+                save_to_history(query, response)
+                question_history.append((query, response))                
                 st.write(response)
 
     # Display question history
