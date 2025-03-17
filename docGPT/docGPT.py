@@ -31,8 +31,8 @@ class DocGPT:
         self.qa_chain = None
         self.embedding_model = embedding_model
         # self._llm = pipeline("text2text-generation", model=model_name, max_new_tokens=256)
-        # self._llm = pipeline("text-generation", model="EleutherAI/gpt-neo-2.7B", max_new_tokens=256)
-        self._llm = pipeline("text-generation", model="Salesforce/codegen2-1B", max_new_tokens=256)
+        self._llm = pipeline("text2text-generation", model="EleutherAI/gpt-neo-2.7B", max_new_tokens=256,temperature=0.7, do_sample=True)
+        # self._llm = pipeline("text-generation", model="Salesforce/codegen2-1B", max_new_tokens=256)
 
         # self._llm =None
         self._db = None  # Store FAISS DB to avoid recomputation
@@ -94,50 +94,6 @@ class DocGPT:
     #         print(f"Error in run(): {e}")  # Debug error
     #         return f"Error: {e}"
 
-    # def generate_visualization_code(self, query):
-    #     """Generates Python code for a visualization based on the query."""
-    #     response = self.qa_chain(query)
-    #     st.write("response1", response)
-
-    #     # Extract relevant stock data from response
-    #     if isinstance(response, dict) and "result" in response:
-    #         stock_data = response["result"]
-    #     else:
-    #         return {"error": "Invalid response format. Expected a dictionary with a 'result' key."}
-
-    #     prompt = (
-    #         f"You are an expert in Python data visualization. "
-    #         f"Given the query: '{query}', "
-    #         f"and the stock data: '{stock_data}', generate a Python script using Matplotlib and Pandas. "
-    #         f"Ensure it loads or creates sample data, creates an appropriate visualization, labels the axes, "
-    #         f"adds a title, and uses professional formatting. Only return the Python code without explanation."
-    #     )
-
-    #     st.write("**Generating visualization code...**")
-
-    #     try:
-    #         response = self._llm(prompt)
-    #         st.write("response", response)
-
-    #         # Extract generated text correctly
-    #         if isinstance(response, list) and len(response) > 0:
-    #             code = response[0].get("generated_text", "").strip()
-    #         elif isinstance(response, dict):
-    #             code = response.get("generated_text", "").strip()
-    #         else:
-    #             code = str(response).strip()
-
-    #         # Validate if it's a valid Python script
-    #         try:
-    #             ast.parse(code)  # Check for syntax errors
-    #         except SyntaxError as e:
-    #             return {"error": f"Syntax Error in generated code: {e}"}
-
-    #         return {"code": code}
-
-    #     except Exception as e:
-    #         return {"error": f"Code generation failed: {e}"}
-
     def extract_python_code(self,response):
         """Extracts Python code from the model's response."""
         if isinstance(response, list) and len(response) > 0:
@@ -170,6 +126,39 @@ class DocGPT:
         except SyntaxError as e:
             return {"error": f"Syntax Error in generated code: {e}"}
 
+    # def extract_python_code(self, response):
+    #     """Extracts and validates Python code from the model's response."""
+    #     if isinstance(response, list) and response:
+    #         full_text = response[0].get("generated_text", "").strip()
+    #     elif isinstance(response, dict):
+    #         full_text = response.get("generated_text", "").strip()
+    #     else:
+    #         return {"error": "Invalid response format."}
+
+    #     # Extract Python code using regex
+    #     code_match = re.search(r"```python\s*(.*?)\s*```", full_text, re.DOTALL)
+    #     if code_match:
+    #         code = code_match.group(1).strip()
+    #     else:
+    #         return {"error": "No valid Python code found in response."}
+
+    #     # Validate extracted code
+    #     try:
+    #         ast.parse(code)  # Syntax check
+    #         return {"code": code}
+    #     except SyntaxError as e:
+    #         return {"error": f"Syntax Error in generated code: {e}"}
+
+    def execute_code(self,code_str):
+        """Safely executes the extracted Python code."""
+        if not isinstance(code_str, str) or not code_str.strip():
+            return {"error": "No valid code provided for execution."}
+
+        try:
+            exec(code_str, globals())
+            return {"success": "Code executed successfully."}
+        except Exception as e:
+            return {"error": f"Error executing code: {e}"}
 
     def generate_visualization_code(self, query):
         """Generates Python code for a visualization based on the query."""
@@ -195,6 +184,19 @@ class DocGPT:
             f"Do not include markdown formatting or any text outside the script."
         )        # st.write("**Generating visualization code...**")
 
+        # prompt = (
+        #     f"You are an expert in Python data visualization. "
+        #     f"Given the following stock data:\n"
+        #     f"'{stock_data}'\n"
+        #     f"Generate a Python script that:\n"
+        #     f"1. Loads the data using pandas.\n"
+        #     f"2. Uses Matplotlib to visualize open, high, low, and close prices.\n"
+        #     f"3. Labels axes and adds a title.\n"
+        #     f"4. Formats the chart professionally.\n\n"
+        #     f"Strictly output only Python code inside ```python ... ``` block, with no explanations, markdown, or additional text."
+        # )
+
+
         st.write("**Generating visualization code...**")
 
         try:
@@ -209,6 +211,22 @@ class DocGPT:
 
 
 
+    # def run(self, query):
+    #     """Processes the query and determines if it's a visualization request or a QA request."""
+    #     if not self.qa_chain:
+    #         return "Error: QA chain not initialized. Please create the QA chain first."
+
+    #     try:
+    #         if "visualize" in query.lower() or "chart" in query.lower():
+    #             code = self.generate_visualization_code(query)
+    #             return {"code": code}
+
+    #         response = self.qa_chain(query)
+    #         return response.get("result", "No answer generated.") if isinstance(response, dict) else response
+
+    #     except Exception as e:
+    #         return f"Error: {e}"
+
     def run(self, query):
         """Processes the query and determines if it's a visualization request or a QA request."""
         if not self.qa_chain:
@@ -216,11 +234,16 @@ class DocGPT:
 
         try:
             if "visualize" in query.lower() or "chart" in query.lower():
-                code = self.generate_visualization_code(query)
-                return {"code": code}
+                code_result = self.generate_visualization_code(query)
+                
+                if "error" in code_result:
+                    return code_result  # Return extraction errors directly
+                
+                execution_result = self.execute_code(code_result["code"])
+                return execution_result
 
             response = self.qa_chain(query)
             return response.get("result", "No answer generated.") if isinstance(response, dict) else response
 
         except Exception as e:
-            return f"Error: {e}"
+            return {"error": f"Unexpected error: {e}"}

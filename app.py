@@ -133,12 +133,23 @@ def save_to_history(question, answer):
     conn.commit()
     conn.close()
 
-def execute_code(code):
-    """Safely executes the generated Python visualization code."""
+# def execute_code(code):
+#     """Safely executes the generated Python visualization code."""
+#     try:
+#         exec(code, globals())
+#     except Exception as e:
+#         st.error(f"Error executing code: {e}")
+
+def execute_code(code_str):
+    """Safely executes the extracted Python code."""
+    if not isinstance(code_str, str) or not code_str.strip():
+        return {"error": "No valid code provided for execution."}
+
     try:
-        exec(code, globals())
+        exec(code_str, globals())
+        return {"success": "Code executed successfully."}
     except Exception as e:
-        st.error(f"Error executing code: {e}")
+        return {"error": f"Error executing code: {e}"}
 
 # Main Streamlit App
 def main():
