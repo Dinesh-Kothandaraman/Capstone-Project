@@ -6,10 +6,19 @@ import PyPDF2  # For PDF processing
 from langchain.schema import Document
 from docGPT.docGPT import DocGPT
 import base64
-import matplotlib.pyplot as plt
 import finnhub
 import yfinance as yf
 import pandas as pd
+import os
+import subprocess
+import threading
+from fastapi import FastAPI
+import uvicorn
+
+app = FastAPI()
+
+# Load model
+doc_gpt = DocGPT([]) 
 
 # API Configuration
 # STOCK_API_KEY = "43YRXE6IDCMHN6W7"  # Replace with your real API Key
@@ -81,30 +90,30 @@ def fetch_stock_data(symbols, api_key, base_url):
 
 
 # Fetch Stock Data from API
-# def fetch_stock_data():
-#     """Fetches real-time stock data from Alpha Vantage API."""
-#     params = {
-#         "function": "TIME_SERIES_MONTHLY",
-#         "symbol": "IBM",
-#         "apikey": STOCK_API_KEY
-#     }
-#     response = requests.get(STOCK_BASE_URL, params=params)
+def fetch_stock_data():
+    """Fetches real-time stock data from Alpha Vantage API."""
+    params = {
+        "function": "TIME_SERIES_MONTHLY",
+        "symbol": "IBM",
+        "apikey": STOCK_API_KEY
+    }
+    response = requests.get(STOCK_BASE_URL, params=params)
 
-#     if response.status_code == 200:
-#         stock_data = response.json()
-#         time_series = stock_data.get("Monthly Time Series", {})
+    if response.status_code == 200:
+        stock_data = response.json()
+        time_series = stock_data.get("Monthly Time Series", {})
 
-#         if not time_series:
-#             st.warning("No stock data found.")
-#             return []
+        if not time_series:
+            st.warning("No stock data found.")
+            return []
 
-#         return [
-#             Document(page_content=f"Stock Date: {date}\nStock Data: {json.dumps(data)}")
-#             for date, data in time_series.items()
-#         ]
-#     else:
-#         st.error(f"Stock API request failed: {response.status_code}")
-#         return []
+        return [
+            Document(page_content=f"Stock Date: {date}\nStock Data: {json.dumps(data)}")
+            for date, data in time_series.items()
+        ]
+    else:
+        st.error(f"Stock API request failed: {response.status_code}")
+        return []
 
 # Fetch Stock-Related News from API
 def fetch_stock_news():
@@ -191,25 +200,6 @@ def fetch_yfinance_data(symbols):
     
     return all_stock_docs
 
-# def fetch_stock_news1():
-#     """Reads stock news from a CSV file and returns it as a list of Document objects."""
-#     all_news_docs = []
-    
-#     # Read CSV file
-#     df = pd.read_csv(r"C:\Users\dines\OneDrive\Documents\GitHub\Capstone Project\Data\analyst_ratings_processed.csv")
-    
-#     # Loop through each row to create Document objects
-#     for _, row in df.iterrows():
-#         date_str = row['Date']  # Treat date as string
-#         doc_content = (
-#             f"Date: {date_str}\n"
-#             f"Stock News: {row['Stock News']}"
-#         )
-        
-#         all_news_docs.append(Document(page_content=doc_content))
-    
-#     return all_news_docs
-
 # Load Pre-generated QA Pairs
 def load_qa_pairs():
     """Loads pre-generated QA pairs from the JSON file."""
@@ -256,23 +246,23 @@ def save_to_history(question, answer):
     conn.commit()
     conn.close()
 
-# def execute_code(code):
-#     """Safely executes the generated Python visualization code."""
-#     try:
-#         exec(code, globals())
-#     except Exception as e:
-#         st.error(f"Error executing code: {e}")
+# FastAPI Endpoints
+@app.get("/")
+def home():
+    return {"message": "DocGPT API is running"}
 
-def execute_code(code_str):
-    """Safely executes the extracted Python code."""
-    if not isinstance(code_str, str) or not code_str.strip():
-        return {"error": "No valid code provided for execution."}
+@app.post("/predict/")
+def predict(query: str):
+    response = doc_gpt.run(query)
+    return {"answer": response}
 
-    try:
-        exec(code_str, globals())
-        return {"success": "Code executed successfully."}
-    except Exception as e:
-        return {"error": f"Error executing code: {e}"}
+# Function to run Streamlit
+def run_streamlit():
+    subprocess.run(["streamlit", "run", "app.py", "--server.port", "8501", "--server.address", "0.0.0.0"])
+
+# If Streamlit is enabled, run it in a separate thread
+if os.environ.get("RUN_STREAMLIT", "false") == "true":
+    threading.Thread(target=run_streamlit, daemon=True).start()
 
 # Main Streamlit App
 def main():
@@ -345,28 +335,9 @@ def main():
 
         if query:
             response = st.session_state.doc_gpt.run(query)
-            if isinstance(response, dict) and "image" in response:
-                display_image(response["image"])
-                st.write("**Answer:**", response.get("result", "No answer generated."))
-            else:
-                save_to_history(query, response)
-                question_history.append((query, response))
-                st.write("**Answer:**", response)
-
-        # if query:
-        #     # response = st.session_state.doc_gpt.run(docs,query)
-        #     response = st.session_state.doc_gpt.run(st.session_state.docs, query)
-
-
-        #     if isinstance(response, dict) and "code" in response:
-        #         st.subheader("📝 Generated Code:")
-        #         st.code(response["code"], language="python")
-        #         execute_code(response["code"])  # Run and display the visualization
-        #     else:
-        #         st.subheader("📖 Answer:")
-        #         save_to_history(query, response)
-        #         question_history.append((query, response))                
-        #         st.write(response)
+            save_to_history(query, response)
+            question_history.append((query, response))
+            st.write("**Answer:**", response)
 
     # Display question history
     if question_history:
@@ -376,4 +347,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # main()

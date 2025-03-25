@@ -7,13 +7,6 @@ from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, AutoMode
 from langchain.docstore.document import Document
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
-import streamlit as st
-import torch
-import os
-import io
-import base64
-import json
-from io import BytesIO
 
 class DocGPT:
     def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
