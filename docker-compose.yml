@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: doc_gpt_app
+    ports:
+      - "8000:8000"
+    environment:
+      - RUN_STREAMLIT=false
+    volumes:
+      - ./question_history.db:/app/question_history.db
+
+  streamlit:
+    build: .
+    container_name: streamlit_app
+    command: ["streamlit", "run", "app.py", "--server.port", "8501", "--server.address", "127.0.0.1"]
+    ports:
+      - "8502:8501"
+    environment:
+      - RUN_STREAMLIT=true
+    depends_on:
+      - app
