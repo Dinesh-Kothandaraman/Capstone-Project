@@ -7,7 +7,7 @@ from transformers import pipeline, AutoTokenizer, AutoModelForCausalLM, AutoMode
 from langchain.docstore.document import Document
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
-
+import torch
 class DocGPT:
     def __init__(self, docs, embedding_model="BAAI/bge-large-en"):
     # def __init__(self, docs, embedding_model="sentence-transformers/all-MiniLM-L6-v2"):
@@ -19,10 +19,6 @@ class DocGPT:
         self.docs = docs
         self.qa_chain = None
         self.embedding_model = embedding_model
-        # self._llm = pipeline("text2text-generation", model=model_name, max_new_tokens=256)
-        # self._llm = pipeline("text2text-generation", model="EleutherAI/gpt-neo-2.7B", max_new_tokens=256,temperature=0.7, do_sample=True)
-        # self._llm = pipeline("text-generation", model="Salesforce/codegen2-1B", max_new_tokens=256)
-
         self._llm =None
         self._db = None  # Store FAISS DB to avoid recomputation
 
@@ -48,7 +44,7 @@ class DocGPT:
         self._db = FAISS.from_documents(chunked_docs, embedding=embeddings)
         return self._db
 
-    def create_qa_chain(self, retriever_k=5, model_path=r"C:\Users\dines\Downloads\Capstone_model"):
+    def create_qa_chain(self, retriever_k=5, model_path=r"/workspace/models/Capstone_model"):
         """Sets up the RAG pipeline using the fine-tuned model."""
         db = self._embeddings()
         retriever = db.as_retriever(search_kwargs={"k": retriever_k})
